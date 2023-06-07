@@ -9,6 +9,7 @@ import (
 	"io"
 	"log"
 	"strconv"
+	"time"
 )
 
 const name = "fib"
@@ -61,6 +62,7 @@ func (a *App) Write(ctx context.Context, n uint) {
 
 	f, err := func(ctx context.Context) (uint64, error) {
 		_, span := otel.Tracer(name).Start(ctx, "Fibonacci")
+		time.Sleep(3 * time.Second)
 		defer span.End()
 		return Fibonacci(n)
 	}(ctx)
