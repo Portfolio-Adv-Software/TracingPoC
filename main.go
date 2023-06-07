@@ -18,12 +18,6 @@ import (
 func main() {
 	l := log.New(os.Stdout, "", 0)
 
-	//f, err := os.Create("traces.txt")
-	//if err != nil {
-	//	l.Fatal(err)
-	//}
-	//defer f.Close()
-
 	ctx := context.Background()
 	exp, err := installExportPipeline(ctx)
 	if err != nil {
@@ -61,21 +55,13 @@ func main() {
 	}
 }
 
-//// newExporter returns a console exporter.
-//func newExporter(w io.Writer) (trace.SpanExporter, error) {
-//	return stdouttrace.New(
-//		stdouttrace.WithWriter(w),
-//		// Use human-readable output.
-//		stdouttrace.WithPrettyPrint(),
-//	)
-//}
-
-func installExportPipeline(ctx context.Context) (func(context.Context) error, error) {
+func installExportPipeline(ctx context.Context) (trace.SpanExporter, error) {
 	client := otlptracehttp.NewClient()
 	exporter, err := otlptrace.New(ctx, client)
 	if err != nil {
 		return nil, fmt.Errorf("creating OTLP trace exporter: %w", err)
 	}
+	return exporter, nil
 }
 
 func newResource() *resource.Resource {
